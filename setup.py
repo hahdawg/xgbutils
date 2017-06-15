@@ -7,8 +7,8 @@ setup(name="xgbutils",
       license="MIT",
       packages=["xgbutils"],
       install_requires=[
-        "xgboost",
+        "hyperopt",
         "scikit-learn",
-        "copy"
+        "xgboost",
       ],
       zip_safe=False)
