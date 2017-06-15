@@ -8,6 +8,7 @@ setup(name="xgbutils",
       packages=["xgbutils"],
       install_requires=[
         "xgboost",
-        "scikit-learn"
+        "scikit-learn",
+        "copy"
       ],
       zip_safe=False)
