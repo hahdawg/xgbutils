@@ -76,6 +76,9 @@ class ParamOptimizeCV(object):
         ----------
         dtrain: xgb.DMatrix
         """
+        if "evals" not in self.fit_params:
+            self.fit_params = dict(self.fit_params.items() + {"evals": [(dtrain, "train")]}.items())
+
         f = self._cv_objective(dtrain=dtrain)
         optimized_params_ = hyperopt.fmin(f, space=self.param_space, algo=hyperopt.tpe.suggest,
                                           max_evals=self.num_evals)
