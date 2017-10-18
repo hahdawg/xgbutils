@@ -8,6 +8,8 @@ setup(name="xgbutils",
       packages=["xgbutils"],
       install_requires=[
         "hyperopt",
+        "numpy",
+        "pandas",
         "scikit-learn",
         "xgboost",
       ],

@@ -1,6 +1,51 @@
 import copy
 import hyperopt
+import numpy as np
 import xgboost as xgb
+
+
+class KFoldTs(object):
+    """
+    Define time series folds in terms of dates.
+
+    Example with monthly data, where we care about a one- to three-month forecast
+    >>> import pandas as pd
+    >>> date_index = pd.date_range("1/1/2014", "12/1/2017", freq="MS")
+    >>> # We'll always start training at the beginning of the sample
+    >>> tr_start_date = "1/1/2014"
+    >>> # After 1/1/2014, keep extending the training window by one month
+    >>> tr_end_dates = pd.date_range("1/1/2015", "9/1/2017", freq="MS")
+    >>> # Test start date is the first date after the training end date
+    >>> te_start_dates = tr_end_dates + pd.tseries.offsets.MonthBegin(1)
+    >>> # We want to test over three months
+    >>> te_end_dates = tr_end_dates + pd.tseries.offsets.MonthBegin(3)
+    >>> # Create fold_dates param for KFoldTs
+    >>> fold_dates = [[(tr_start_dt, tr_end_date), (te_start_date, te_end_date)]
+                      for (tr_end_date, te_start_dt, te_end_date)
+                      in zip(tr_end_dates, te_start_dates, te_end_date)]
+    >>> kts = KFoldTs(date_index, fold_dates)
+    """
+
+    def __init__(self, date_index, fold_dates):
+        """
+        Parameters
+        ----------
+        date_index = [date]
+        fold_dates = [(tr_start_dt, tr_end_dt),
+                      (te_start_dt, te_end_date)]
+        """
+        self.date_index = date_index
+        self.fold_dates = fold_dates
+        self.n_splits = len(fold_dates)
+
+    def split(self, X=None, y=None, groups=None):
+        for (tr_start, tr_end), (te_start, te_end) in self.fold_dates:
+            train = np.where((tr_start <= self.date_index) & (self.date_index <= tr_end))[0]
+            test = np.where((te_start <= self.date_index) & (self.date_index <= te_end))[0]
+            yield train, test
+
+    def get_n_splits(self, X=None, y=None, groups=None):
+        return self.n_splits
 
 
 class ParamOptimizeCV(object):
