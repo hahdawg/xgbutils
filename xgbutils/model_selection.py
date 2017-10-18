@@ -4,8 +4,10 @@ import numpy as np
 import xgboost as xgb
 
 
-class KFoldTs(object):
+class CVTS(object):
     """
+    Time series cross validator.
+
     Define time series folds in terms of dates.
 
     Example with monthly data, where we care about a one- to three-month forecast
@@ -23,7 +25,7 @@ class KFoldTs(object):
     >>> fold_dates = [[(tr_start_dt, tr_end_date), (te_start_date, te_end_date)]
                       for (tr_end_date, te_start_dt, te_end_date)
                       in zip(tr_end_dates, te_start_dates, te_end_date)]
-    >>> kts = KFoldTs(date_index, fold_dates)
+    >>> cvts = CVTS(date_index, fold_dates)
     """
 
     def __init__(self, date_index, fold_dates):

@@ -23,7 +23,7 @@ def test_kfoldts():
                   [("1/10/2017", "1/20/2017"), ("1/25/2017", "1/26/2017")],
                   [("1/1/2017", "1/1/2017"), ("1/2/2017", "1/2/2017")]
                  ]
-    kft = ms.KFoldTs(date_index=date_index, fold_dates=fold_dates)
-    for (train_dates, test_dates), (train_index, test_index) in zip(fold_dates, kft.split()):
+    cvts = ms.CVTS(date_index=date_index, fold_dates=fold_dates)
+    for (train_dates, test_dates), (train_index, test_index) in zip(fold_dates, cvts.split()):
         assert (_date_range_to_index(*train_dates) == train_index + 1).all()
         assert (_date_range_to_index(*test_dates) == test_index + 1).all()
